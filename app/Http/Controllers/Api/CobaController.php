@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Friends;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CobaController extends Controller
 {
@@ -15,12 +15,11 @@ class CobaController extends Controller
      */
     public function index()
     {
-        $friends = Friends::orderBy('id', 'desc')->get();
-
+        $friends = Friends::orderBy('id', 'desc')->paginate(3);
         return response()->json([
             'success' => true,
-            'message' => 'Daftar data teman',
-            'data'    => $friends
+            'message' => 'Daftar Data Teman',
+            'data' => $friends
         ], 200);
     }
 
@@ -34,33 +33,31 @@ class CobaController extends Controller
     {
         $request->validate([
             'nama' => 'required|unique:friends|max:255',
-            'no_telp' => 'required|numeric',
-            'alamat' => 'required',
+            'no_tlp' => 'required|numeric',
+            'alamat' => 'required'
         ]);
-
+        
+        
         $friends = Friends::create([
             'nama' => $request->nama,
-            'no_telp' => $request->no_telp,
-            'alamat' => $request->alamat,
-            'groups_id' => $request->groups_id
+            'no_telp' => $request->no_tlp,
+            'alamat' => $request->alamat
         ]);
 
-        if($friends)
-        {
+        if($friends){
             return response()->json([
                 'success' => true,
-                'message' => 'Teman berhasil ditambahkan',
-                'data'    => $friends,
-            
+                'message' => 'Data Teman Berhasil Ditambahkan',
+                'data' => $friends
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Teman gagal di tambahkan',
-                'data'    => $friends
-            
-            ], 400);
+                'message' => 'Data Teman Gagal Ditambahkan',
+                'data' => $friends
+            ], 409);
         }
+            
     }
 
     /**
@@ -71,13 +68,7 @@ class CobaController extends Controller
      */
     public function show($id)
     {
-        $friend = Friends::where('id', $id)->first();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Detail Teman',
-            'data'    => $friend
-        ], 200);
+        //
     }
 
     /**
@@ -89,18 +80,7 @@ class CobaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $friend = Friends::find($id)
-        ->update([
-            'nama' => $request->nama,
-            'no_telp' => $request->no_telp,
-            'alamat' => $request->alamat,
-        ]);
-        return response()->json([
-            'success' => true,
-            'message' => 'Data teman berhasil di rubah',
-            'data'    => $friend
-        ], 200);
-    
+        //
     }
 
     /**
@@ -111,12 +91,6 @@ class CobaController extends Controller
      */
     public function destroy($id)
     {
-        $friend = Friends::find($id)->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data teman berhasil di hapus',
-            'data'    => $friend
-        ], 200);
+        //
     }
 }
